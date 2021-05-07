@@ -22,7 +22,10 @@ class datosRequest extends FormRequest
     {
         return [
 
-            'email' => 'required|unique:datos|max:20',
+
+//            'email' => 'required|string|email|max:255|unique:datos|regex:/minambiente.gov.co]/',
+//            'email' => 'required|unique:datos|max:255|regex:/minambiente.gov.co]/',
+            'email' => 'required|unique:datos|max:255',
             'departamento' => 'required',
             'municipio' => 'required',
         ];

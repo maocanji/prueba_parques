@@ -1,0 +1,19 @@
+[
+
+    {
+        "nombre_dep": "Amazonas",
+        "id_dep": "91",
+        "bandera": "//upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Flag_of_Amazonas_%28Colombia%29.svg/100px-Flag_of_Amazonas_%28Colombia%29.svg.png"
+    },
+    {
+        "nombre_dep": "Bogota",
+        "id_dep": "11",
+        "bandera": "bandera"
+    },
+    {
+        "nombre_dep": "Antioquia",
+        "id_dep": "05",
+        "bandera": "//upload.wikimedia.org/wikipedia/commons/thumb/3/33/Flag_of_Antioquia_Department.svg/100px-Flag_of_Antioquia_Department.svg.png"
+    }
+]
+

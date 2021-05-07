@@ -1,0 +1,27 @@
+[
+
+    {
+        "mun": "Puerto Nariño",
+        "cod_dep": "91"
+    },
+    {
+        "mun": "leticia",
+        "cod_dep": "91"
+    },
+    {
+        "mun": "Medellin",
+        "cod_dep": "05"
+    },
+    {
+        "mun": "Bello",
+        "cod_dep": "05"
+    },
+    {
+        "mun": "Betania",
+        "cod_dep": "05"
+    },
+    {
+        "mun": "Santafe de Bogota",
+        "cod_dep": "11"
+    }
+]

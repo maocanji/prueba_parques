@@ -8,45 +8,83 @@
     });
 
     angularApp.controller( 'listaCtrl', function(   $scope , $http, $timeout, $log, $filter, ngTableParams ,$modal){
-        /*Inicializar variables*/
-        $scope.reg = {!! $datos !!};
 
-        $scope.airplanes = [];
-        $http.get('dep-mun.json').then(function(data) {
-            $scope.airplanes = data
+        /* Función para cargar archivos de deparatamentos json que se encuentra en public */
+
+        $http.get('departamentos.json').then(function(data) {
+            $scope.listDep = data
+        });
+        /* Función para cargar archivos de municipios json que se encuentra en public */
+        $http.get('municipios.json').then(function(response) {
+            $scope.listMun = response.data;
         });
 
-        $scope.students = [{ name: 'John' }, { name: 'Smith' }, { name: 'Allen' }, { name: 'Johnson' }, { name: 'Harris' }, { name: 'Williams' }, { name: 'David' }];
-        /*Función para guardar */
-        $scope.guardarDatos = function() {
+        /*Inicializar variables*/
+        $scope.reg = {!! $datos !!};
+        $scope.munici  = [];
+
+        /* Función para reiniciar el formulario y sus validaciones */
+        /*  */
+        $scope.reset = function(form) {
+            $scope.formData = {};
+            $scope.munici = {};
+                registroForm.$setPristine();
+                registroForm.$setUntouched();
+                formData.$setPristine();
+                formData.$setUntouched();
+
+            alert('Formulario para Iniciar - limpio');
+        };
+
+
+        /* Función que recorre el listado de los municipios que hacen parte de los departamentos */
+        /* Importante la estructura de los archivos en JSON */
+
+        $scope.myFunc = function($index) {
+            for(var i = 0, arr = 5; i < arr; i++ ){
+                    if($scope.listMun[i]['cod_dep'] === $index['id_dep'] ){
+                        $scope.munici.push($scope.listMun[i]);
+                }else{
+                        console.log('-')
+                    }
+            }
+            return $scope.munici;
+        };
+
+
+        /* Función para guardar */
+        $scope.guardarDatos = function(formData) {
+
             $scope.ruta = '{!! url( "store" ) !!}';
-            /*Se envían los datos del formulario por ajax*/
+            /* Se envían los datos del formulario por Ajax */
             $http.post( $scope.ruta ,
                 {
                     _token : $("input[name='_token']").val(),
-                    email : $('input[name=email]').val(),
-                    municipio : $('input[name=municipio]').val(),
-                    departamento: $('input[name=departamento]').val()
+                     email : $('input[name=email]').val(),
+                    municipio : formData.muni['mun'],
+                    departamento : formData.departamento['nombre_dep'],
                 }).then(function successCallback(response,data) {
-                $scope.reg.push(response.data.reg);
-            }, function errorCallback(response,data,message,errors) {
+                /* Agrega la fila al tabla componente ng-table */
+                $scope.data.push(response.data.reg);
+                /* Funciòn reinicar foirmulario */
+                $scope.reset();
 
-                    //process validation errors here.
-                    console.log(response.data.errors);
+            }, function errorCallback(response,data,message,errors) {
+                /* Lista de Errores */
                     errorsHtml = '<div class="alert alert-danger"><ul>';
                     $.each( response.data.errors , function( key, value ) {
                         errorsHtml += '<li>' + value[0] + '</li>';
                     });
                     errorsHtml += '</ul></div>';
                     $( '#validation' ).html( errorsHtml );
-
-
             });
         };
-        $scope.tableParams = new ngTableParams({
-            page        : 1 ,
-            count       :  2,
 
+
+        /* tabla de registro - Ng Table - Componente */
+        $scope.tableParams = new ngTableParams({
+            page        : 1,
+            count       :  10,
         },
             {
                 total: $scope.reg.length,
@@ -56,9 +94,9 @@
                 }
             });
 
-        /* Función para borrar el trámite */
+        /* Función para Elimina  el Registro */
         $scope.borrarRegistro = function (index) {
-            console.log(index);
+            /* Función de llamar el modal con el diseño de Verificar para eliminar */
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: '{!! route( "confirmar" ) !!}',
@@ -66,7 +104,7 @@
                 size: 'md',
                 resolve: {
                     index: function () {
-                        // return index;
+                        /* Indice selecionado de la tabla de registro */
                         return $scope.reg[index];
                     },
                     description: function () {
@@ -74,23 +112,26 @@
                     }
                 }
             });
+            /*Interaciòn de la respuesta del modal */
+            /* llama a la ruta de eliminaciòn en el controlador */
             modalInstance.result.then(function (index) {
                 $http.post( '{!! route( "eliminar" ) !!}' ,
                     {
                         registro : index
                     }).then(function successCallback(response,data) {
-                        console.log(response)
-                    $scope.mensaje = "Regitro eliminado.";
-                    $scope.reg.splice(index, 1);
+                    /* Quita la fila de registro */
+                    $scope.data.splice($scope.reg.indexOf(index),1);
+
                 }), function errorCallback(response,data) {
                     $scope.error   = "Error al tratar de eliminar un registro.";
-                    // $timeout(function(){$scope.error = '';},6000);
+
                 };
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
     });
+    /* Controlador del modal angularjs */
     angularApp.controller('ModalConfirmarCtrl', function ($scope, $log, $modalInstance, index, description) {
         $scope.codigo = index;
         $scope.description = description;
@@ -103,11 +144,5 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
-
-
-
-
-
 
 </script>
