@@ -21,7 +21,6 @@ class pruebaController extends Controller
     }
     public function store(datosRequest $request)
     {
-
         $request->validated();
         $data = $request->json()->all();
         $datos = new Datos();
@@ -43,6 +42,10 @@ class pruebaController extends Controller
         $id = $request->registro['id'];
         $datos = Datos::find( $id);
         $datos->delete( );
+
+        return response( )->json( 'ok' );
+    }
+    public function eliminar2(Request $request){
 
         return response( )->json( 'ok' );
     }

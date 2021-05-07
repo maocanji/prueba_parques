@@ -23,51 +23,57 @@
                     <h4 class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-primary">Formulario</span>
                     </h4>
+{{--<% listMun.data['cod_dep'] %>--}}
+{{--<% listMun[0]['mun'] %>--}}
 
+                    <div class=" well">
+                        <% munici %>
+                    </div>
                     <form name="registroForm">
                             <section class="col-md-12">
 
                                 {{ csrf_field() }}
 
                                 <div class='form-group'>
+                                    <label for="departamento">Departamento</label>
+                                    <select  ng-init="formData.departamento"
+                                        ng-options="departamento.nombre_dep for departamento in listDep.data track by departamento.id_dep" class='form-control'
+                                        name='departamento' data-ng-model='formData.departamento' data-ng-value='departamento.id_dep' ng-change='myFunc(formData.departamento)'
+                                        data-ng-class='{ error: registroForm.departamento.$invalid && !registroForm.$pristine }'>
+                                        <option value="">-- Seleccione --</option>
+                                    </select>
+                                </div>
+
+                                <div class='form-group'>
+                                    <label for="departamento">Municipio (**)</label>
+                                    <select ng-init="municipio"
+                                             ng-options="muni.mun for muni in munici track by muni.mun" class='form-control'
+                                             name='muni' data-ng-model='formData.muni' data-ng-value='muni.mun' required
+                                             data-ng-class='{ error: registroForm.muni.$invalid && !registroForm.$pristine }'>
+                                        <option value="">-- Seleccione --</option>
+                                    </select>
+                                </div>
+
+
+
+                                <div class='form-group'>
                                     <label for="email">Email</label>
                                     <input type="email"  class='form-control' placeholder='Email'
-                                              name='email' data-ng-model='formData.email' required
-                                              data-ng-class='{ error: registroForm.email.$invalid && !registroForm.$pristine }'>
+                                           name='email' data-ng-model='formData.email' required
+                                           data-ng-class='{ error: registroForm.email.$invalid && !registroForm.$pristine }'>
                                     </input>
-
                                 </div>
 
-                                <div class='form-group'>
-                                    <label for="departamento">Departamento</label>
-                                    <input type="text"  class='form-control' placeholder='Dep'
-                                           name='departamento' data-ng-model='formData.departamento' required
-                                           data-ng-class='{ error: registroForm.departamento.$invalid && !registroForm.$pristine }'>
-                                    </input>
-
-                                </div>
-
-                                <div class='form-group'>
-                                    <label for="municipio">Municipio</label>
-                                    <input type="text"  class='form-control' placeholder='Municipio'
-                                           name='municipio' data-ng-model='formData.municipio' required
-                                           data-ng-class='{ error: registroForm.municipio.$invalid && !registroForm.$pristine }'>
-                                    </input>
-
-                                </div>
                             </section>
-                            <div class="col-md-12">
-                            <p></p>
-                                <input type="submit" class='form-control btn btn-primary'
-                                       data-ng-click='guardarDatos(formData)' data-ng-disabled='!registroForm.$valid'>
-                            </div>
-
+                                <div class="col-md-12">
+                                <p></p>
+                                    <input type="submit" class='form-control btn btn-primary'
+                                           data-ng-click='guardarDatos(formData)' data-ng-disabled='!registroForm.$valid'>
+                                </div>
                     </form>
-
-
-
-
                 </div>
+
+
                 <div class="col-md-7 col-lg-8">
                     <h4 class="mb-3">Billing address</h4>
                     <table ng-table="tableParams"  class="table  table-striped ">
@@ -75,7 +81,7 @@
                             <p>Total Reg: <strong> <% reg.length  %> </strong>
                         </div>
 
-                        <tr ng-repeat="dato in data  " >
+                        <tr ng-repeat="dato in data track by $index" ng-class="clase[$index]">
                             <td  class="text-center small" data-title="'No.'" >
                                 <% $index %>
                             </td>
